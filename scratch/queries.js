@@ -27,7 +27,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true})
     console.error(err);
   });
 
-//FIND NOTE BY ID
+// //FIND NOTE BY ID
 // mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
 //   .then(() => {
 //     const Id = '000000000000000000000003';
@@ -45,7 +45,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true})
 //     console.error(err);
 //   });
 
-//CREATE A NEW NOTE
+// //CREATE A NEW NOTE
 // mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
 //   .then(()=> {
 //     const newNote = {
@@ -84,7 +84,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true})
 //     console.error(err);
 //   });
 
-// DELETE A NOTE BY ID
+// // DELETE A NOTE BY ID
 // mongoose.connect(MONGODB_URI, { useNewUrlParser:true })
 //   .then(()=>{
 //     const Id = '5bcf6f8633e12c2168626dc6';

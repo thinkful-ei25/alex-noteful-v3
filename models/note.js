@@ -9,7 +9,7 @@ const noteSchema = new mongoose.Schema({
 
 noteSchema.set('timestamps', true);
 
-noteSchema.set('toObject', {
+noteSchema.set('toJSON', {
   virtuals: true,
   transform: (doc, ret) => {
     delete ret._id;
