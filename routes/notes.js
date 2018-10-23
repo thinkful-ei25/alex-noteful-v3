@@ -7,7 +7,15 @@ const router = express.Router();
 
 /* ========== GET/READ ALL ITEMS ========== */
 router.get('/', (req, res, next) => {
-  return Note.find().sort({ createdAt: 'asc'})
+  const { searchTerm } = req.query;
+
+  const re = new RegExp(searchTerm, 'i');
+  let filter = {};
+  if(searchTerm) {
+    filter = {$or: [{ title: re}, {content: re}]};
+  }
+
+  return Note.find(filter).sort({ createdAt: 'asc'})
     .then(results => {
       if(results) {
         res.json(results);
