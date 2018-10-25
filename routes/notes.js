@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const mongoose = require('mongoose');
 const Note = require('../models/note');
 
 const router = express.Router();
@@ -11,8 +12,11 @@ router.get('/', (req, res, next) => {
 
   const re = new RegExp(searchTerm, 'i');
   let filter = {};
+  // if(searchTerm) {
+  //   filter = {$or: [{ title: re}, {content: re}]};
+  // }
   if(searchTerm) {
-    filter = {$or: [{ title: re}, {content: re}]};
+    filter = { title: re };
   }
 
   return Note.find(filter).sort({ createdAt: 'asc'})
@@ -33,9 +37,16 @@ router.get('/', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
   const id = req.params.id;
 
+  if(!mongoose.Types.ObjectId.isValid(id)){
+    const err = new Error('The `id` is not valid');
+    err.status = 400;
+    return next(err);
+  }
+
   return Note.findById(id)
     .then(result => {
       if(result) {
+        console.log(result);
         res.json(result);
       } else {
         next();
@@ -109,11 +120,7 @@ router.delete('/:id', (req, res, next) => {
   
   return Note.findByIdAndDelete(id)
     .then(result => {
-      if (result){
-        res.status(204).end();
-      } else {
-        next();
-      }
+      res.status(204).end();
     })
     .catch(err => {
       next(err);
