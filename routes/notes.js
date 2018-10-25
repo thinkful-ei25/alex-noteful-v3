@@ -8,7 +8,7 @@ const router = express.Router();
 
 /* ========== GET/READ ALL ITEMS ========== */
 router.get('/', (req, res, next) => {
-  const { searchTerm } = req.query;
+  const { searchTerm, folderId } = req.query;
 
   const re = new RegExp(searchTerm, 'i');
   let filter = {};
@@ -17,6 +17,10 @@ router.get('/', (req, res, next) => {
   // }
   if(searchTerm) {
     filter = { title: re };
+  }
+
+  if(folderId) {
+    filter = {folderId: folderId};
   }
 
   return Note.find(filter).sort({ createdAt: 'asc'})
@@ -60,12 +64,19 @@ router.get('/:id', (req, res, next) => {
 
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
-  const { title, content } = req.body;
+  const { title, content, folderId } = req.body;
 
   const newNote = {
     title: title,
-    content: content
+    content: content,
+    folderId: folderId
   };
+
+  if(!mongoose.Types.ObjectId.isValid(folderId)){
+    const err = new Error('The `folder id` is not valid');
+    err.status = 400;
+    return next(err);
+  }
 
   if (!newNote.title) {
     const err = new Error('Missing `title` in request body');
@@ -87,12 +98,19 @@ router.post('/', (req, res, next) => {
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/:id', (req, res, next) => {
   const id = req.params.id;
-  const { title, content } = req.body;
+  const { title, content, folderId } = req.body;
  
   const updateNote = {
     title: title,
-    content: content
+    content: content,
+    folderId: folderId
   };
+
+  if(!mongoose.Types.ObjectId.isValid(folderId)){
+    const err = new Error('The `folder id` is not valid');
+    err.status = 400;
+    return next(err);
+  }
 
   if (!updateNote.title) {
     const err = new Error('Missing `title` in request body');
