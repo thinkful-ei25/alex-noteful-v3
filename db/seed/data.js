@@ -70,4 +70,4 @@ const folders = [
   }
 ];
 
-module.exports = { folders, notes };
+module.exports = { folders , notes };
