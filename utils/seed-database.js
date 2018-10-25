@@ -17,7 +17,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true})
       Folder.createIndexes()
     ]);
   })
-  .then(results => {
+  .then(() => {
     console.info('Inserted Seed Data');
   })
   .then(() => mongoose.disconnect())
