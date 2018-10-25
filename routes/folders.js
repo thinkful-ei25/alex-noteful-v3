@@ -3,6 +3,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Folder = require('../models/folder');
+const Note = require('../models/note');
 
 const router = express.Router();
 
@@ -98,14 +99,17 @@ router.put('/:id', (req, res, next) => {
 
 router.delete('/:id', (req, res, next) => {
   const { id } = req.params;
-
-  return Folder.findByIdAndDelete(id)
-    .then(() => {
-      res.status(204).end();
-    })
-    .catch(err => {
-      next(err);
+  return Note.updateMany({folderId: id}, {$unset: {folderId: ''}})
+    .then(() =>{
+      return Folder.findByIdAndDelete(id)
+        .then(() => {
+          res.status(204).end();
+        })
+        .catch(err => {
+          next(err);
+        });
     });
+   
 });
 
 
