@@ -8,7 +8,7 @@ const router = express.Router();
 
 /* ========== GET/READ ALL ITEMS ========== */
 router.get('/', (req, res, next) => {
-  const { searchTerm, folderId } = req.query;
+  const { searchTerm, folderId, tagId } = req.query;
 
   const re = new RegExp(searchTerm, 'i');
   let filter = {};
@@ -23,6 +23,9 @@ router.get('/', (req, res, next) => {
     filter = {folderId: folderId};
   }
 
+  if(tagId) {
+    filter = {tags: tagId};
+  }
   return Note.find(filter)
     .populate('folderId', 'name')
     .populate('tags', 'name')
