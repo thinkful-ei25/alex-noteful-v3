@@ -23,7 +23,10 @@ router.get('/', (req, res, next) => {
     filter = {folderId: folderId};
   }
 
-  return Note.find(filter).sort({ createdAt: 'asc'})
+  return Note.find(filter)
+    .populate('folderId', 'name')
+    .populate('tags', 'name')
+    .sort({ createdAt: 'asc'})
     .then(results => {
       if(results) {
         res.json(results);
@@ -64,19 +67,28 @@ router.get('/:id', (req, res, next) => {
 
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
-  const { title, content, folderId } = req.body;
+  const { title, content, folderId, tags } = req.body;
 
   const newNote = {
     title: title,
     content: content,
-    folderId: folderId
+    folderId: folderId,
+    tags: tags
   };
-
+  
   if(!mongoose.Types.ObjectId.isValid(folderId)){
     const err = new Error('The `folder id` is not valid');
     err.status = 400;
     return next(err);
   }
+
+  tags.forEach(tag => {
+    if(!mongoose.Types.ObjectId.isValid(tag)){
+      const err = new Error('The `tag id` is not valid');
+      err.status = 400;
+      return next(err);
+    }
+  });
 
   if (!newNote.title) {
     const err = new Error('Missing `title` in request body');
@@ -98,12 +110,13 @@ router.post('/', (req, res, next) => {
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/:id', (req, res, next) => {
   const id = req.params.id;
-  const { title, content, folderId } = req.body;
+  const { title, content, folderId, tags } = req.body;
  
   const updateNote = {
     title: title,
     content: content,
-    folderId: folderId
+    folderId: folderId,
+    tags: tags
   };
 
   if(!mongoose.Types.ObjectId.isValid(folderId)){
@@ -111,6 +124,14 @@ router.put('/:id', (req, res, next) => {
     err.status = 400;
     return next(err);
   }
+  
+  tags.forEach(tag => {
+    if(!mongoose.Types.ObjectId.isValid(tag)){
+      const err = new Error('The `tag id` is not valid');
+      err.status = 400;
+      return next(err);
+    }
+  });
 
   if (!updateNote.title) {
     const err = new Error('Missing `title` in request body');
