@@ -97,4 +97,4 @@ const tags =[
   }
 ];
 
-module.exports = { folders , notes, tags };
+module.exports = { folders, notes, tags };

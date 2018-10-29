@@ -141,7 +141,7 @@ describe('Noteful API resource', function (){
 
   describe('POST /api/notes', function(){
     it('should create and return a new item when provided valid data', function(){
-      const newNote = { title:'testarticle', content:'testcontent'};
+      const newNote = { title:'testarticle', content:'testcontent', folderId: '111111111111111111111100', tagId: '222222222222222222222200'};
       let res;
       return chai.request(app)
         .post('/api/notes')
@@ -162,7 +162,7 @@ describe('Noteful API resource', function (){
     });
 
     it('should return an error when missing `title` field', function(){
-      const newNote = {content:'testcontent'};
+      const newNote = { content:'testcontent', folderId: '111111111111111111111100', tagId: '222222222222222222222200'};
       let res;
       return chai.request(app)
         .post('/api/notes')
@@ -183,7 +183,7 @@ describe('Noteful API resource', function (){
 
   describe('PUT /api/notes/:id', function(){
     it('should update the note', function(){
-      const updateNote = { title: 'updatetitle', content: 'updatecontent'};
+      const updateNote = { title:'testarticle', content:'testcontent', folderId: '111111111111111111111100', tagId: '222222222222222222222200'};
       let res;
       return chai.request(app)
         .get('/api/notes')
@@ -209,7 +209,7 @@ describe('Noteful API resource', function (){
     });
 
     it('should return an error when missing `title` field', function(){
-      const updateNote = {content: 'updatecontent'};
+      const updateNote = { content:'testcontent', folderId: '111111111111111111111100', tagId: '222222222222222222222200'};
       let res;
       return chai.request(app)
         .get('/api/notes')

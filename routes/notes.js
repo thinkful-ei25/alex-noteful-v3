@@ -70,13 +70,13 @@ router.get('/:id', (req, res, next) => {
 
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
-  const { title, content, folderId, tags } = req.body;
+  const { title, content, folderId, tagId} = req.body;
 
   const newNote = {
     title: title,
     content: content,
     folderId: folderId,
-    tags: tags
+    tags: tagId
   };
   
   if(!mongoose.Types.ObjectId.isValid(folderId)){
@@ -85,13 +85,13 @@ router.post('/', (req, res, next) => {
     return next(err);
   }
 
-  tags.forEach(tag => {
-    if(!mongoose.Types.ObjectId.isValid(tag)){
-      const err = new Error('The `tag id` is not valid');
-      err.status = 400;
-      return next(err);
-    }
-  });
+  
+  if(!mongoose.Types.ObjectId.isValid(tagId)){
+    const err = new Error('The `tag id` is not valid');
+    err.status = 400;
+    return next(err);
+  }
+  
 
   if (!newNote.title) {
     const err = new Error('Missing `title` in request body');
@@ -113,13 +113,13 @@ router.post('/', (req, res, next) => {
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/:id', (req, res, next) => {
   const id = req.params.id;
-  const { title, content, folderId, tags } = req.body;
+  const { title, content, folderId, tagId } = req.body;
  
   const updateNote = {
     title: title,
     content: content,
     folderId: folderId,
-    tags: tags
+    tags: tagId
   };
 
   if(!mongoose.Types.ObjectId.isValid(folderId)){
@@ -128,13 +128,11 @@ router.put('/:id', (req, res, next) => {
     return next(err);
   }
   
-  tags.forEach(tag => {
-    if(!mongoose.Types.ObjectId.isValid(tag)){
-      const err = new Error('The `tag id` is not valid');
-      err.status = 400;
-      return next(err);
-    }
-  });
+  if(!mongoose.Types.ObjectId.isValid(tagId)){
+    const err = new Error('The `tag id` is not valid');
+    err.status = 400;
+    return next(err);
+  }
 
   if (!updateNote.title) {
     const err = new Error('Missing `title` in request body');
